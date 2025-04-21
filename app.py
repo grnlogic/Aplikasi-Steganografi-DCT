@@ -8,7 +8,7 @@ from stegano_utils import embed_message_dct, extract_message_dct, calculate_psnr
 
 # Set page configuration
 st.set_page_config(
-    page_title="Aplikasi Steganografi",
+    page_title="PixelHide",
     page_icon="🔐",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -101,46 +101,76 @@ def local_css():
             color: #666;
             font-size: 0.8rem;
         }
+        /* Popup styling */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .popup-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 10px;
+        }
+        .popup-title {
+            font-size: 1.5rem;
+            color: #000000;
+            margin: 0;
+            padding-left: 10px;
+        }
+        .popup-body {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #000000;
+        }
+        .popup-footer {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .popup-icon {
+            font-size: 1.8rem;
+            color: #000000;
+        }
+        .popup-button {
+            padding: 8px 16px;
+            background-color: #1E88E5;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .popup-button:hover {
+            background-color: #0277BD;
+        }
     </style>
     """, unsafe_allow_html=True)
 
 local_css()
 
-# Tambahkan opsi tema gelap/terang
-theme = st.radio("Pilih Tema:", ["Terang", "Gelap"], horizontal=True)
-
-if theme == "Gelap":
-    st.markdown("""
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-        }
-        .stButton button {
-            background-color: #1E88E5;
-            color: white;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-    <style>
-        body {
-            background-color: #ffffff;
-            color: #000000;
-        }
-        .stButton button {
-            background-color: #1E88E5;
-            color: white;
-        }
-    </style>
-    """, unsafe_allow_html=True)
-
 # App header with logo
 def header():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        st.markdown('<div class="main-header">🔐 Aplikasi Steganografi DCT</div>', unsafe_allow_html=True)
+        st.markdown('<div class="main-header">🔐 PixelHide</div>', unsafe_allow_html=True)
         st.markdown("""
         <div style="text-align: center; margin-bottom: 2rem;">
             Sembunyikan pesan rahasia Anda di dalam gambar menggunakan Discrete Cosine Transform
@@ -175,7 +205,8 @@ with st.sidebar:
     """)
     
     st.markdown("---")
-    st.markdown("### Dibuat dengan Streamlit & OpenCV")
+    st.markdown("### Dibuat dengan Oleh Kelompok Keamanan Informasi")
+    st.markdown("### Universitas Siliwangi")
 
 # Tambahkan ikon pada tab
 tab1, tab2, tab3 = st.tabs(["📝 Sisipkan Pesan", "🔍 Ekstrak Pesan", "📊 Evaluasi"])
@@ -188,7 +219,7 @@ with tab1:
     st.markdown('<div class="card">', unsafe_allow_html=True)
     st.markdown("""
     ### Petunjuk
-    1. Unggah gambar (PNG atau JPG)
+    1. Rekomendasi Unggah gambar (PNG atau JPG)
     2. Masukkan pesan rahasia Anda
     3. Klik "Sisipkan Pesan" untuk menyembunyikan pesan di dalam gambar
     4. Unduh gambar stego yang dihasilkan
@@ -197,7 +228,7 @@ with tab1:
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Upload and message input
-    uploaded_file = st.file_uploader("Pilih gambar sampul...", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader("Pilih gambar sampul...", type=["jpg", "jpeg", "png", "gif"])
     message = st.text_area("Masukkan pesan untuk disembunyikan:", height=100, placeholder="Ketik pesan rahasia Anda di sini...")
     
     if uploaded_file is not None:
@@ -307,7 +338,7 @@ with tab2:
     st.markdown('</div>', unsafe_allow_html=True)
     
     # Upload stego image
-    stego_file = st.file_uploader("Unggah gambar stego...", type=["jpg", "jpeg", "png"], key="extract_uploader")
+    stego_file = st.file_uploader("Unggah gambar stego...", type=["jpg", "jpeg", "png", "gif"], key="extract_uploader")
     
     if stego_file is not None:
         st.markdown('<div class="card">', unsafe_allow_html=True)
